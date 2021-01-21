@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+.LogoContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.LogoWordsContainer{
+    font-size: 3rem;
+    font-family: 'Bungee', cursive;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
