@@ -1,3 +1,5 @@
-import HomePage from './HomePage'
+import HomePage from './HomePage';
+import NotFoundPage from './NotFoundPage';
+import PostsPage from './PostsPage';
 
-export { HomePage }
+export { HomePage, NotFoundPage, PostsPage }
