@@ -83,6 +83,7 @@ const PostPage = () => {
     return(
         <MainContainer >
             <Logo />
+            <NavButton title='Voltar' to='/posts' />
             <PageTitle title={(id ? 'Editar' : 'Criar') + ' Publicação'} />
             <PostFormContainer>
                 <label>Titulo da publicação: </label>
