@@ -1,37 +1,53 @@
 import { Link } from 'react-router-dom'
-import { Logo, MainContainer, NavButton, PostsTable } from '../../components'
+import { Logo, MainContainer, NavButton, OptionsBar, PostsTable } from '../../components'
 import eye from '../../assets/eye.png'
+import { db } from '../../config';
+import { useEffect, useState } from 'react';
 
 const PostsPage = () => {
+    
+    const [requestData, setRequestData] = useState([]);
+
+    useEffect(() => {
+        let auxData = [];
+        db.collection("posts").get()
+            .then( querySnapshot => {
+                querySnapshot.forEach( doc => {
+                    let auxDoc = doc.data();
+                    auxDoc.id = doc.id;
+                    auxData.push(auxDoc);
+                })
+                setRequestData(auxData);
+            })
+            .catch( err => window.alert(err));
+    }, []);
+
+
     return(
         <MainContainer>
             <Logo/>
-            <div style={{margin: '40px'}}>
+            <OptionsBar>
                 <NavButton to='/posts/create' title='Novo post'/>
-            </div>
+                <NavButton to='/tags' title='Gerenciar Tags' hollow/>
+            </OptionsBar>
             <PostsTable>
-                <tr>
-                    <td> 1 </td>
-                    <td> O problema da água do mar para os dentes </td>
-                    <td> Nome do autor blabla </td>
-                    <td> tag1, tag2, tag3 </td>
-                    <td>
-                        <Link to='/posts/id'>
-                             <img src={eye} alt='detalhes' height='20px'/>
-                        </Link>
-                    </td>
-                </tr>
-                <tr>
-                    <td> 1 </td>
-                    <td> O problema da água do mar para os dentes </td>
-                    <td> Nome do autor blabla </td>
-                    <td> tag1, tag2, tag3 </td>
-                    <td>
-                        <Link to='/posts/id'>
-                             <img src={eye} alt='detalhes' height='20px'/>
-                        </Link>
-                    </td>
-                </tr>
+                <tbody>
+                { requestData.map( data =>
+                        <tr>
+                            <td> {data.title} </td>
+                            <td> {data.author} </td>
+                            <td > 
+                                { data.tags && data.tags.map( tag => tag+', ')} 
+                            </td>
+                            <td>
+                                <Link to={{ pathname:'/posts/edit/'+data.id,
+                                            doc: data, }} >
+                                    <img src={eye} alt='detalhes' height='20px'/>
+                                </Link>
+                            </td>
+                        </tr>
+                ) }
+                </tbody>
             </PostsTable>
         </MainContainer>
     )

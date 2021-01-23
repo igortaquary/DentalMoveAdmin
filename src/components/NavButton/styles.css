@@ -7,6 +7,8 @@
     font-weight: 600;
     text-decoration: none;
     box-shadow: 0px 2px 4px #3d3d3d;
+    cursor: pointer;
+    margin: 10px 20px;
 }
 
 .ButtonContainer:hover{

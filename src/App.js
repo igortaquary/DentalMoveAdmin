@@ -1,4 +1,4 @@
-import { HomePage, NotFoundPage, PostsPage } from './pages';
+import { HomePage, NotFoundPage, PostsPage, PostPage } from './pages';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 function App() {
@@ -8,8 +8,14 @@ function App() {
         <Route path='/' exact>
           <HomePage />
         </Route>
-        <Route path='/posts'>
+        <Route path='/posts' exact>
           <PostsPage />
+        </Route>
+        <Route path='/posts/edit/:id'>
+          <PostPage />
+        </Route>
+        <Route path='/posts/create'>
+          <PostPage />
         </Route>
         <Route>
           <NotFoundPage />

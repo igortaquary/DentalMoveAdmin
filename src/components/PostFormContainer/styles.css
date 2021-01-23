@@ -1,0 +1,18 @@
+.PostFormContainer{
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.PostFormContainer input{
+    margin: 5px 0 20px;
+}
+
+.PostFormContainer textarea{
+    margin: 5px 0 20px;
+    padding: 5px;
+    font-size: 0.8rem;
+    height: 10rem;
+    border-radius: 5px;
+}
