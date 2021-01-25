@@ -55,7 +55,7 @@ const PostPage = () => {
             .catch( (err) => window.alert('Erro ao carregar as tags\n' + err))
 
         console.log('a')
-    }, [id, doc])
+    }, [id, doc, location.doc])
 
     useEffect(() => {
         if(selectedTags){
