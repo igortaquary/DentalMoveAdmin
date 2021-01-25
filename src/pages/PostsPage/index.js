@@ -31,6 +31,12 @@ const PostsPage = () => {
                 <NavButton to='/tags' title='Gerenciar Tags' hollow/>
             </OptionsBar>
             <PostsTable>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor(a)</th>
+                    <th>Tags</th>
+                    <th>Detalhes</th>
+                </tr>
                 <tbody>
                 { requestData.map( data =>
                         <tr>

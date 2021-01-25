@@ -1,4 +1,4 @@
-import { HomePage, NotFoundPage, PostsPage, PostPage } from './pages';
+import { HomePage, NotFoundPage, PostsPage, PostPage, TagsPage } from './pages';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 function App() {
@@ -16,6 +16,9 @@ function App() {
         </Route>
         <Route path='/posts/create'>
           <PostPage />
+        </Route>
+        <Route path='/tags'>
+          <TagsPage />
         </Route>
         <Route>
           <NotFoundPage />

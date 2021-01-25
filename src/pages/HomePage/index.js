@@ -5,7 +5,8 @@ const HomePage = () => {
         <MainContainer center>
             <Logo />
             <div style={{height: '50px'}}></div>
-            <NavButton to='/posts' title='Gerenciar posts'/>
+            <NavButton to='/posts' title='Gerenciar Posts'/>
+            <NavButton to='/tags' title='Gerenciar Tags' hollow/>
         </MainContainer>
     )
 }

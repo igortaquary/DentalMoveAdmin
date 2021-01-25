@@ -13,8 +13,10 @@ const PostPage = () => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [content, setContent] = useState('');
+    const [link, setLink] = useState('');
     //const [articleDate, setArticleDate] = useState(null);
-    //const [tags, setTags] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [redirect, setRedirect] = useState(false);
 
      useEffect( () => {
@@ -34,11 +36,41 @@ const PostPage = () => {
                 setTitle(doc.title);
                 setAuthor(doc.author);
                 setContent(doc.content);
-            } catch(e) {
-                window.alert('aconteceu um erro inesperado :o \n' + e)
+                setLink(doc.link);
+                setSelectedTags(doc.tags);
+                
+            } catch(err) {
+                window.alert('Ocorreu um erro inesperado\n' + err)
             }
         }
-    }, [id, location, doc]) 
+        db.collection('tags').get()
+            .then( res => {
+                let auxTags = [];
+                res.forEach( tagDoc => {
+                    let auxDoc = tagDoc.data();
+                    auxTags.push(auxDoc.name);
+                })
+                setTags(auxTags);
+            })
+            .catch( (err) => window.alert('Erro ao carregar as tags\n' + err))
+
+        console.log('a')
+    }, [id, doc])
+
+    useEffect(() => {
+        if(selectedTags){
+            try{
+            selectedTags.forEach( tag => {
+                if(document.getElementById('tag:'+tag)){
+                    document.getElementById('tag:'+tag).checked = true;
+                }
+            })
+            } catch {
+                console.log('As tags não carregaram')
+            }
+        }
+        console.log('bb')
+    }, [selectedTags, tags])
 
     const deletePost = () => {
         let confirm = window.confirm('Tem certeza que deseja apagar esta publicação?');
@@ -57,6 +89,8 @@ const PostPage = () => {
             title: title,
             content: content, 
             author: author,
+            link: link,
+            tags: selectedTags,
         }
         db.collection('posts').doc(id).set(post)
             .then( () => {
@@ -71,6 +105,8 @@ const PostPage = () => {
             title: title,
             content: content, 
             author: author,
+            link: link,
+            tags: selectedTags,
         }
         db.collection('posts').add(post)
             .then( () => {
@@ -78,6 +114,19 @@ const PostPage = () => {
                 setRedirect(true);
             })
             .catch( err => window.alert('Não foi possivel criar\n' + err))
+    }
+
+    const toggleTag = (tag) => {
+        let auxTags = [];
+        if(selectedTags){
+            auxTags = selectedTags;
+        }
+        if(auxTags.includes(tag)){
+            auxTags = auxTags.filter( (value) => value !== tag);
+        } else {
+            auxTags.push(tag);
+        }
+        setSelectedTags(auxTags);
     }
 
     return(
@@ -90,8 +139,23 @@ const PostPage = () => {
                 <input type='text' value={title} onChange={e => setTitle(e.target.value)}/>
                 <label>Autor(a): </label>
                 <input type='text' value={author} onChange={e => setAuthor(e.target.value)}/>
+                <label>Link do artigo: &nbsp;&nbsp;
+                    <a href={link} target='_blank' rel='noreferrer'>{link}</a>
+                </label>
+                <input type='text' value={link} onChange={e => setLink(e.target.value)}/>
                 <label>Resumo: </label>
                 <textarea value={content} onChange={e => setContent(e.target.value)}/>
+                <label>Tags: </label>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                    {tags.map( tag => 
+                        <div>
+                            <input type='checkbox' id={'tag:'+tag}
+                            onClick={() => {toggleTag(tag)}}
+                            style={{margin: '5px 5px 5px 18px'}} />
+                            {tag}
+                        </div>
+                    )}
+                </div>
             </PostFormContainer>
             <OptionsBar>
                 {id ? 
