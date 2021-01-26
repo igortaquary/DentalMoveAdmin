@@ -28,5 +28,4 @@ db.enablePersistence().catch(function(err) {
 }); 
 */
 
-export { db }
-export default firebase;
+export { db, firebase }

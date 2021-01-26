@@ -14,7 +14,7 @@ const PostPage = () => {
     const [author, setAuthor] = useState('');
     const [content, setContent] = useState('');
     const [link, setLink] = useState('');
-    //const [articleDate, setArticleDate] = useState(null);
+    const [articleDate, setArticleDate] = useState(null);
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [redirect, setRedirect] = useState(false);
@@ -38,7 +38,7 @@ const PostPage = () => {
                 setContent(doc.content);
                 setLink(doc.link);
                 setSelectedTags(doc.tags);
-                
+                setArticleDate(doc.articleDate);
             } catch(err) {
                 window.alert('Ocorreu um erro inesperado\n' + err)
             }
@@ -84,14 +84,20 @@ const PostPage = () => {
         }
     }
 
-    const savePost = () => {
+    const formatObject = () => {
         const post = {
             title: title,
             content: content, 
             author: author,
             link: link,
             tags: selectedTags,
+            articleDate: articleDate,
         }
+        return post;
+    }
+
+    const savePost = () => {
+        const post = formatObject();
         db.collection('posts').doc(id).set(post)
             .then( () => {
                 window.alert('Publicação editada com sucesso!');
@@ -101,13 +107,7 @@ const PostPage = () => {
     }
 
     const createPost = () => {
-        const post = {
-            title: title,
-            content: content, 
-            author: author,
-            link: link,
-            tags: selectedTags,
-        }
+        const post = formatObject();
         db.collection('posts').add(post)
             .then( () => {
                 window.alert('Publicação criada com sucesso! Te amo.');
@@ -143,6 +143,8 @@ const PostPage = () => {
                     <a href={link} target='_blank' rel='noreferrer'>{link}</a>
                 </label>
                 <input type='text' value={link} onChange={e => setLink(e.target.value)}/>
+                <label>Data do artigo:</label>
+                <input type='date' value={articleDate} onChange={e => setArticleDate(e.target.value)} />
                 <label>Resumo: </label>
                 <textarea value={content} onChange={e => setContent(e.target.value)}/>
                 <label>Tags: </label>

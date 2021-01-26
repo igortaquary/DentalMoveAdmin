@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { Logo, MainContainer, NavButton, OptionsBar, PageTitle, PostsTable } from "../../components"
 import {db} from '../../config.js';
 import remove from '../../assets/delete.png'
-import { useHistory } from 'react-router'
+import { Redirect } from 'react-router'
 
 const TagsPage = () => {
 
     const [newTag, setNewTag] = useState('');
     const [tags, setTags] = useState([]);
-
-    const history = useHistory();
+    const [refresh, setRefresh] = useState(false);
 
     useEffect( () => {
         db.collection('tags').get()
@@ -29,9 +28,11 @@ const TagsPage = () => {
     const handleNewTag = () => {
         if(newTag.length > 2){
         db.collection('tags').add({name: newTag})
-            .then( () => window.alert('Tag criada com sucesso.'))
+            .then( () => { 
+                window.alert('Tag criada com sucesso.')
+                setRefresh(true);
+            })
             .catch( err => window.alert('Erro ao criar a tag: \n', err))
-            .finally( () => history.go(0));
         } else {
             window.alert('A nova tag precisa ter pelo menos 3 caracteres')
         }
@@ -41,9 +42,9 @@ const TagsPage = () => {
         db.collection('tags').doc(tagId).delete()
             .then( () => {
                 window.alert('Tag apagada');
+                setRefresh(true);
             })
             .catch( err => window.alert(err))
-            .finally( () => history.go(0));
     }
 
     return(
@@ -79,6 +80,7 @@ const TagsPage = () => {
                     )
                 }
             </PostsTable>
+            { refresh && <Redirect to='/tags' /> }
         </MainContainer>
     )
 }
