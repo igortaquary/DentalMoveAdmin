@@ -148,9 +148,9 @@ const PostPage = () => {
                 <label>Resumo: </label>
                 <textarea value={content} onChange={e => setContent(e.target.value)}/>
                 <label>Tags: </label>
-                <div style={{display: 'flex', flexDirection: 'row'}}>
+                <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                     {tags.map( tag => 
-                        <div style={{display: 'flex', flexDirection: 'row', margin:'5px 10px'}}>
+                        <div style={{display: 'flex', flexDirection: 'row', alignItems:'center', margin:'5px 10px'}}>
                             <input type='checkbox' id={'tag:'+tag}
                             onClick={() => {toggleTag(tag)}}
                             style={{margin: '5px 5px 5px 18px'}} />
