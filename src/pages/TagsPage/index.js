@@ -59,6 +59,7 @@ const TagsPage = () => {
                 <input type='text' value={newTag} style={{ margin: '0 10px'}}
                 onChange={e => setNewTag(e.target.value)}/>
                 <NavButton title='Criar Tag' onClick={handleNewTag} />
+                <div style={{marginLeft: 'auto'}}>Numero de tags: {tags.length}</div>
             </OptionsBar>
             <PostsTable>
                 <tr>

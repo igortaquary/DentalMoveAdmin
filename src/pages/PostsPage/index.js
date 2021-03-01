@@ -29,6 +29,7 @@ const PostsPage = () => {
             <OptionsBar>
                 <NavButton to='/posts/create' title='Novo post'/>
                 <NavButton to='/tags' title='Gerenciar Tags' hollow/>
+                <div style={{marginLeft: 'auto'}}>Numero de posts: {requestData.length}</div>
             </OptionsBar>
             <PostsTable>
                 <tr>
