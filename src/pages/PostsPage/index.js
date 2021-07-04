@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 const PostsPage = () => {
     
     const [requestData, setRequestData] = useState([]);
+    const [displayPosts, setDisplayPosts] = useState([]);
 
     useEffect(() => {
         let auxData = [];
@@ -18,10 +19,22 @@ const PostsPage = () => {
                     auxData.push(auxDoc);
                 })
                 setRequestData(auxData);
+                setDisplayPosts(auxData);
             })
             .catch( err => window.alert(err));
     }, []);
 
+    const searchPosts = (text) => {
+        let auxPosts = []
+        requestData.forEach( post => {
+            if( (post.title).toLowerCase().includes(text.toLowerCase()) ||
+                (post.author).toLowerCase().includes(text.toLowerCase())
+            ){
+                auxPosts.push(post);
+            }
+        });
+        setDisplayPosts(auxPosts);
+    }
 
     return(
         <MainContainer>
@@ -29,7 +42,11 @@ const PostsPage = () => {
             <OptionsBar>
                 <NavButton to='/posts/create' title='Novo post'/>
                 <NavButton to='/tags' title='Gerenciar Tags' hollow/>
-                <div style={{marginLeft: 'auto'}}>Numero de posts: {requestData.length}</div>
+                <input placeholder="Pesquisar por post" onChange={(e) => searchPosts(e.target.value)} />
+                { displayPosts.length === requestData.length ?
+                    <div style={{marginLeft: 'auto'}}>Numero de posts: {requestData.length}</div> :
+                    <div style={{marginLeft: 'auto'}}>Numero de posts: {displayPosts.length + "/" +requestData.length}</div>
+                }
             </OptionsBar>
             <PostsTable>
                 <tr>
@@ -39,7 +56,7 @@ const PostsPage = () => {
                     <th>Detalhes</th>
                 </tr>
                 <tbody>
-                { requestData.map( data =>
+                { displayPosts.map( data =>
                         <tr>
                             <td> {data.title} </td>
                             <td> {data.author} </td>

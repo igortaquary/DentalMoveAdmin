@@ -18,6 +18,7 @@ const PostPage = () => {
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [redirect, setRedirect] = useState(false);
+    const [loading, setLoading] = useState(false);
 
      useEffect( () => {
         if(id){
@@ -85,6 +86,12 @@ const PostPage = () => {
     }
 
     const formatObject = () => {
+        if(!/[12][0-9]{3}$/.test(articleDate)){
+            throw new Error("Digite um ano de criação válido");
+        }
+        if(selectedTags.length === 0) {
+            throw new Error("Selecione pelo menos uma tag");
+        }
         const post = {
             title: title,
             content: content, 
@@ -96,24 +103,30 @@ const PostPage = () => {
         return post;
     }
 
-    const savePost = () => {
-        const post = formatObject();
-        db.collection('posts').doc(id).set(post)
-            .then( () => {
-                window.alert('Publicação editada com sucesso!');
-                setRedirect(true);
-            })
-            .catch( err => window.alert('Não foi possivel criar\n' + err))
+    const savePost = async () => {
+        setLoading(true);
+        try{
+            const post = formatObject();
+            await db.collection('posts').doc(id).set(post);
+            window.alert('Publicação editada com sucesso!');
+            setRedirect(true);
+        } catch (err) {
+            window.alert('Não foi possivel criar\n' + err)
+        }
+        setLoading(false);
     }
 
-    const createPost = () => {
-        const post = formatObject();
-        db.collection('posts').add(post)
-            .then( () => {
-                window.alert('Publicação criada com sucesso! Te amo.');
-                setRedirect(true);
-            })
-            .catch( err => window.alert('Não foi possivel criar\n' + err))
+    const createPost = async () => {
+        setLoading(true);
+        try{
+            const post = formatObject();
+            await db.collection('posts').add(post);
+            window.alert('Publicação criada com sucesso! Te amo.');
+            setRedirect(true);
+        } catch (err) {
+            window.alert('Não foi possivel criar\n' + err)
+        }
+        setLoading(false);
     }
 
     const toggleTag = (tag) => {
@@ -135,19 +148,19 @@ const PostPage = () => {
             <NavButton title='Voltar' to='/posts' />
             <PageTitle title={(id ? 'Editar' : 'Criar') + ' Publicação'} />
             <PostFormContainer>
-                <label>Titulo da publicação: </label>
-                <input type='text' value={title} onChange={e => setTitle(e.target.value)}/>
-                <label>Autor(a): </label>
-                <input type='text' value={author} onChange={e => setAuthor(e.target.value)}/>
+                <label>Titulo da publicação *: </label>
+                <input type='text' value={title} onChange={e => setTitle(e.target.value)} required/>
+                <label>Autor(a) *: </label>
+                <input type='text' value={author} onChange={e => setAuthor(e.target.value)} required/>
                 <label>Link do artigo: &nbsp;&nbsp;
                     <a href={link} target='_blank' rel='noreferrer'>{link}</a>
                 </label>
                 <input type='text' value={link} onChange={e => setLink(e.target.value)}/>
-                <label>Data do artigo:</label>
-                <input type='date' value={articleDate} onChange={e => setArticleDate(e.target.value)} />
-                <label>Resumo: </label>
-                <textarea value={content} onChange={e => setContent(e.target.value)}/>
-                <label>Tags: </label>
+                <label>Ano do artigo *:</label>
+                <input type='text' value={articleDate} onChange={e => setArticleDate(e.target.value)} required/>
+                <label>Resumo *: </label>
+                <textarea value={content} onChange={e => setContent(e.target.value)} required/>
+                <label>Tags *: </label>
                 <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                     {tags.map( tag => 
                         <div style={{display: 'flex', flexDirection: 'row', alignItems:'center', margin:'5px 10px'}}>
@@ -161,8 +174,8 @@ const PostPage = () => {
             </PostFormContainer>
             <OptionsBar>
                 {id ? 
-                <NavButton title='Salvar' onClick={savePost}/> :
-                <NavButton title='Criar' onClick={createPost}/>
+                <NavButton title='Salvar' onClick={savePost} disabled={loading}/> :
+                <NavButton title='Criar' onClick={createPost} disabled={loading}/>
                 }
                 <NavButton title='Cancelar' to='/posts' hollow/>
                 <div style={{width: '50%'}}></div>
